@@ -519,3 +519,4 @@
 /Users/gegeenee/Desktop/BookStoreNew/backend/BookStore.API/obj/Debug/net8.0/BookStore.API.pdb
 /Users/gegeenee/Desktop/BookStoreNew/backend/BookStore.API/obj/Debug/net8.0/BookStore.API.genruntimeconfig.cache
 /Users/gegeenee/Desktop/BookStoreNew/backend/BookStore.API/obj/Debug/net8.0/ref/BookStore.API.dll
+/Users/gegeenee/Desktop/BookStoreNew/backend/BookStore.API/obj/Debug/net8.0/BookStore.API.sourcelink.json
