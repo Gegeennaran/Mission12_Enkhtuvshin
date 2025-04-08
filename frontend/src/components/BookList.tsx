@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Book } from './types/Book';
+import { useEffect, useState } from "react";
+import { Book } from "../types/Book";
+import { useNavigate } from "react-router-dom";
 
 function BookList({ selectedCat }: { selectedCat: string[] }) {
   const [books, setBooks] = useState<Book[]>();
@@ -7,15 +8,16 @@ function BookList({ selectedCat }: { selectedCat: string[] }) {
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBooks = async () => {
       const catParams = selectedCat
         .map((cat) => `bookCats=${encodeURIComponent(cat)}`)
-        .join('&');
+        .join("&");
       const response = await fetch(
-        `https://localhost:5000/Book?pageMany=${pageSize}&pageNum=${pageNum}&sortBy=title&sortOrder=${sortOrder}${selectedCat.length ? `&${catParams}` : ''}`
+        `https://localhost:5000/Book?pageMany=${pageSize}&pageNum=${pageNum}&sortBy=title&sortOrder=${sortOrder}${selectedCat.length ? `&${catParams}` : ""}`,
       );
       const data = await response.json();
       setBooks(data.books);
@@ -33,14 +35,14 @@ function BookList({ selectedCat }: { selectedCat: string[] }) {
           <div className="card-body">
             <ul className="list-unstyled">
               <li>
-                {' '}
+                {" "}
                 <strong>Book Author:</strong> {b.author}
               </li>
               <li>
                 <strong>Publisher:</strong> {b.publisher}
               </li>
               <li>
-                {' '}
+                {" "}
                 <strong>ISBN:</strong> {b.isbn}
               </li>
               <li>
@@ -48,16 +50,27 @@ function BookList({ selectedCat }: { selectedCat: string[] }) {
                 {b.classification} / {b.category}
               </li>
               <li>
-                {' '}
+                {" "}
                 <strong>Number of Pages: </strong>
                 {b.pageCount}
               </li>
               <li>
-                {' '}
+                {" "}
                 <strong>Price: </strong>
                 {b.price}
               </li>
             </ul>
+            <button
+              className="btn btn-success"
+              onClick={() =>
+                navigate(
+                  `/addcart/${encodeURIComponent(b.title)}/${b.bookID}?price=${b.price}`,
+                )
+              }
+            >
+              {" "}
+              Add to shopping card
+            </button>
           </div>
         </div>
       ))}
@@ -100,10 +113,10 @@ function BookList({ selectedCat }: { selectedCat: string[] }) {
 
       <button
         onClick={() =>
-          setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+          setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
         }
       >
-        Sort by Title ({sortOrder === 'asc' ? 'A → Z' : 'Z → A'})
+        Sort by Title ({sortOrder === "asc" ? "A → Z" : "Z → A"})
       </button>
     </>
   );

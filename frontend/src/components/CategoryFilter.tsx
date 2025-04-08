@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import './CategoryFilter.css';
+import { useEffect, useState } from "react";
+import "./CategoryFilter.css";
 function CategoryFilter({
   selectedCat,
   setSelectedCat,
@@ -11,12 +11,12 @@ function CategoryFilter({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://localhost:5000/Book/GetCategory');
+        const response = await fetch("https://localhost:5000/Book/GetCategory");
         const data = await response.json();
-        console.log('Fetched categories', data);
+        console.log("Fetched categories", data);
         setCategories(data);
       } catch (error) {
-        console.error('Error fetching categories', error);
+        console.error("Error fetching categories", error);
       }
     };
     fetchCategories();
