@@ -1,31 +1,41 @@
 import { useEffect, useState } from "react";
 import { Book } from "../types/Book";
 import { useNavigate } from "react-router-dom";
+import { fetchBooks } from "../api/BooksAPI";
 
 function BookList({ selectedCat }: { selectedCat: string[] }) {
   const [books, setBooks] = useState<Book[]>();
   const [pageSize, setPageSize] = useState<number>(5);
   const [pageNum, setPageNum] = useState<number>(1);
-  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      const catParams = selectedCat
-        .map((cat) => `bookCats=${encodeURIComponent(cat)}`)
-        .join("&");
-      const response = await fetch(
-        `https://localhost:5000/Book?pageMany=${pageSize}&pageNum=${pageNum}&sortBy=title&sortOrder=${sortOrder}${selectedCat.length ? `&${catParams}` : ""}`,
-      );
-      const data = await response.json();
-      setBooks(data.books);
-      setTotalItems(data.totalBooks);
-      setTotalPages(Math.ceil(totalItems / pageSize));
+    const loadBooks = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchBooks(
+          pageSize,
+          pageNum,
+          selectedCat,
+          sortOrder,
+        );
+
+        setBooks(data.books);
+        setTotalPages(Math.ceil(data.totalBooks / pageSize));
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchBooks();
-  }, [pageSize, pageNum, totalItems, sortOrder, selectedCat]);
+    loadBooks();
+  }, [pageSize, pageNum, sortOrder, selectedCat]);
+  if (loading) return <p>Loading Books...</p>;
+  if (error) return <p className="text-red-500">Error</p>;
   return (
     <>
       <br />
